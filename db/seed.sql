@@ -21,5 +21,5 @@ VALUES
 ("Jane", "Resource", 2, 5),
 ("Jessica", "Money", 3, 5),
 ("Jack", "Smart", 4, 5),
-("Jerry", "Dev", 5, 5);
-("Janine", "Boss", 5, 2)
+("Jerry", "Dev", 5, 5),
+("Janine", "Boss", 5, 2);
