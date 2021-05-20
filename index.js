@@ -14,9 +14,9 @@ connection.connect((err) => {
     if (err) throw err;
     console.log("connected as id " + connection.threadId + "\n");
     questions();
-  });
+});
   
-  function questions() {
+function questions() {
     inquirer
       .prompt([
         {
@@ -63,9 +63,9 @@ connection.connect((err) => {
             connection.end;
         }
       });
-  }
+}
   
-  viewAll = (tableName) => {
+viewAll = (tableName) => {
     connection.query(
       `SELECT * FROM ??`,
       [tableName],
@@ -77,4 +77,26 @@ connection.connect((err) => {
         questions();
       }
     );
-  };
+};
+
+addDepartment = () => {
+  inquirer
+    .prompt({
+      type: "input",
+      name: "dept",
+      message: "New department name:"
+    })
+    .then((answer) => {
+      connection.query(
+        "INSERT INTO department SET ?",
+        {
+          department_name: answer.dept,
+        },
+        function (err, res) {
+          if (err) throw err;
+          console.table(res);
+          questions();
+        }
+      )
+    })
+};
