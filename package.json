@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/lexiehansen/employee-tracker.git"
   },
-  "author": "",
+  "author": "Lexie Hanse",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/lexiehansen/employee-tracker/issues"
@@ -18,6 +18,8 @@
   "homepage": "https://github.com/lexiehansen/employee-tracker#readme",
   "dependencies": {
     "console.table": "^0.10.0",
-    "inquirer": "^7.3.3"
-  }
+    "inquirer": "^7.3.3",
+    "mysql2": "^2.2.5"
+  },
+  "devDependencies": {}
 }
