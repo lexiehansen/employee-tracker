@@ -31,10 +31,11 @@ function questions() {
             "Add a role",
             "Add an employee",
             "Update an employee role",
-            "Exit",
+            "Exit"
           ],
         },
       ])
+
       .then((answer) => {
         console.log(answer.menu);
         switch (answer.menu) {
@@ -59,8 +60,8 @@ function questions() {
           case "Update an employee role":
             updateRole();
             break;
-          case "Quit":
-            connection.end;
+          case "Exit":
+            connection.end();
         }
       });
 }
@@ -86,15 +87,18 @@ addDepartment = () => {
       name: "dept",
       message: "New department name:"
     })
+
     .then((answer) => {
       connection.query(
         "INSERT INTO department SET ?",
         {
           department_name: answer.dept,
         },
+        
         function (err, res) {
           if (err) throw err;
           console.table(res);
+
           questions();
         }
       )
@@ -109,6 +113,7 @@ addRole = () => {
       name: name,
       value: id,
     }));
+
     inquirer
       .prompt([
         {
@@ -128,6 +133,7 @@ addRole = () => {
           choices: arr,
         },
       ])
+
       .then((answer) => {
         console.log(answer);
         connection.query(
@@ -139,9 +145,11 @@ addRole = () => {
               department_id: answer.dept,
             },
           ],
+
           function (err, res) {
             if (err) throw err;
             console.table(res);
+
             questions();
           }
         )
@@ -163,6 +171,7 @@ addEmployee = () => {
         message: "Last Name:",
       },
     ])
+
     .then((answer) => {
       let firstName = answer.first;
       let lastName = answer.last;
@@ -173,6 +182,7 @@ addEmployee = () => {
           name: title,
           value: id,
         }));
+
         inquirer
           .prompt([
             {
@@ -182,6 +192,7 @@ addEmployee = () => {
               choices: roleChoices,
             },
           ])
+
           .then((answer) => {
             let roleId = answer.roles;
 
@@ -194,6 +205,7 @@ addEmployee = () => {
                   man_ind,
                 })
               );
+
               inquirer
                 .prompt([
                   {
@@ -217,6 +229,7 @@ addEmployee = () => {
                       function (err, res) {
                         if (err) throw err;
                         console.table(res);
+
                         questions();
                       }
                     )
@@ -225,4 +238,67 @@ addEmployee = () => {
           })
       })
     })
+};
+
+updateRole = () => {
+  connection.query(`SELECT * FROM employee`, function (err, res) {
+    if (err) throw err;
+    const employeeChoices = res.map(({ id, first_name, last_name }) => ({
+      name: first_name + " " + last_name,
+      value: id,
+    }));
+
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          name: "employeeUpdate",
+          message: "Which employee do you want to update?",
+          choices: employeeChoices,
+        },
+      ])
+
+      .then((answer) => {
+        let employee_id = answer.employeeUpdate;
+        connection.query(`SELECT * FROM roles`, function (err, res) {
+          if (err) throw err;
+          const roleChoices = res.map(({ id, title }) => ({
+            name: title,
+            value: id,
+          }));
+
+          inquirer
+            .prompt([
+              {
+                type: "list",
+                name: "role",
+                message: "New role:",
+                choices: roleChoices,
+              },
+            ])
+
+            .then((answer) => {
+              console.log("employee: ", employee_id, " role:", answer.roles);
+              connection.query(
+                "UPDATE employee SET ? WHERE ?",
+                [
+                  {
+                    roles_id: answer.roles,
+                  },
+                  {
+                    id: employee_id,
+                  },
+                ],
+
+                function (err, res) {
+                  if (err) throw err;
+                  console.table(res);
+
+                  questions();
+                }
+              )
+            })
+        })
+      })
+  })
 };
